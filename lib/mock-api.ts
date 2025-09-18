@@ -1,9 +1,9 @@
-import type { Job, Candidate, Assessment, CandidateStage } from "./types"
-import { talentFlowDB } from "./db"
+import type { Job, Candidate, Assessment, CandidateStage } from "./types";
+import { talentFlowDB } from "./db";
 
 // Mock data generators
 const generateMockJobs = (): Job[] => {
-  const jobs: Job[] = []
+  const jobs: Job[] = [];
   const titles = [
     "Senior Frontend Developer",
     "Backend Engineer",
@@ -30,15 +30,25 @@ const generateMockJobs = (): Job[] => {
     "Content Creator",
     "Social Media Manager",
     "Growth Hacker",
-  ]
+  ];
 
-  const tags = ["Remote", "Full-time", "Part-time", "Contract", "Senior", "Junior", "Mid-level", "Urgent", "New"]
+  const tags = [
+    "Remote",
+    "Full-time",
+    "Part-time",
+    "Contract",
+    "Senior",
+    "Junior",
+    "Mid-level",
+    "Urgent",
+    "New",
+  ];
 
   for (let i = 0; i < 25; i++) {
-    const title = titles[i]
-    const slug = title.toLowerCase().replace(/\s+/g, "-")
-    const status = Math.random() > 0.3 ? "active" : "archived"
-    const jobTags = tags.filter(() => Math.random() > 0.7).slice(0, 3)
+    const title = titles[i];
+    const slug = title.toLowerCase().replace(/\s+/g, "-");
+    const status = Math.random() > 0.3 ? "active" : "archived";
+    const jobTags = tags.filter(() => Math.random() > 0.7).slice(0, 3);
 
     jobs.push({
       id: `job-${i + 1}`,
@@ -54,17 +64,30 @@ const generateMockJobs = (): Job[] => {
         "Excellent communication abilities",
         "Team player with leadership potential",
       ],
-      createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(
+        Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+      ),
       updatedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
-    })
+    });
   }
 
-  return jobs
-}
+  return jobs;
+};
 
 const generateMockCandidates = (jobs: Job[]): Candidate[] => {
-  const candidates: Candidate[] = []
-  const firstNames = ["John", "Jane", "Michael", "Sarah", "David", "Emily", "Chris", "Lisa", "Robert", "Amanda"]
+  const candidates: Candidate[] = [];
+  const firstNames = [
+    "John",
+    "Jane",
+    "Michael",
+    "Sarah",
+    "David",
+    "Emily",
+    "Chris",
+    "Lisa",
+    "Robert",
+    "Amanda",
+  ];
   const lastNames = [
     "Smith",
     "Johnson",
@@ -76,16 +99,23 @@ const generateMockCandidates = (jobs: Job[]): Candidate[] => {
     "Davis",
     "Rodriguez",
     "Martinez",
-  ]
-  const stages: CandidateStage[] = ["applied", "screen", "tech", "offer", "hired", "rejected"]
+  ];
+  const stages: CandidateStage[] = [
+    "applied",
+    "screen",
+    "tech",
+    "offer",
+    "hired",
+    "rejected",
+  ];
 
   for (let i = 0; i < 1000; i++) {
-    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)]
-    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)]
-    const name = `${firstName} ${lastName}`
-    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`
-    const jobId = jobs[Math.floor(Math.random() * jobs.length)].id
-    const stage = stages[Math.floor(Math.random() * stages.length)]
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const name = `${firstName} ${lastName}`;
+    const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${i}@example.com`;
+    const jobId = jobs[Math.floor(Math.random() * jobs.length)].id;
+    const stage = stages[Math.floor(Math.random() * stages.length)];
 
     candidates.push({
       id: `candidate-${i + 1}`,
@@ -93,32 +123,38 @@ const generateMockCandidates = (jobs: Job[]): Candidate[] => {
       email,
       stage,
       jobId,
-      appliedAt: new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000),
-      updatedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+      appliedAt: new Date(
+        Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000,
+      ),
+      updatedAt: new Date(
+        Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+      ),
       notes:
         Math.random() > 0.7
           ? [
               {
                 id: `note-${i}`,
                 content: `Great candidate with strong technical skills. @john.doe mentioned they would be a good fit for the team.`,
-                createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+                createdAt: new Date(
+                  Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
+                ),
                 author: "HR Team",
               },
             ]
           : undefined,
-    })
+    });
   }
 
-  return candidates
-}
+  return candidates;
+};
 
 const generateMockAssessments = (jobs: Job[]): Assessment[] => {
-  const assessments: Assessment[] = []
+  const assessments: Assessment[] = [];
 
   // Create assessments for first 3 jobs
   for (let i = 0; i < 3; i++) {
-    const job = jobs[i]
-    if (!job) continue
+    const job = jobs[i];
+    if (!job) continue;
 
     assessments.push({
       id: `assessment-${i + 1}`,
@@ -143,7 +179,14 @@ const generateMockAssessments = (jobs: Job[]): Assessment[] => {
               type: "multi-choice",
               text: "Which technologies are you proficient in?",
               validation: { required: true },
-              options: ["JavaScript", "TypeScript", "React", "Node.js", "Python", "Java"],
+              options: [
+                "JavaScript",
+                "TypeScript",
+                "React",
+                "Node.js",
+                "Python",
+                "Java",
+              ],
             },
             {
               id: `q-${i}-3`,
@@ -183,55 +226,60 @@ const generateMockAssessments = (jobs: Job[]): Assessment[] => {
           ],
         },
       ],
-      createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+      createdAt: new Date(
+        Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+      ),
       updatedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
-    })
+    });
   }
 
-  return assessments
-}
+  return assessments;
+};
 
 // Initialize mock data with IndexedDB
-let mockJobs: Job[] = []
-let mockCandidates: Candidate[] = []
-let mockAssessments: Assessment[] = []
+let mockJobs: Job[] = [];
+let mockCandidates: Candidate[] = [];
+let mockAssessments: Assessment[] = [];
 
 // Initialize data on first load
 const initializeData = async () => {
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") return;
 
   try {
-    const isInitialized = await talentFlowDB.isInitialized()
+    const isInitialized = await talentFlowDB.isInitialized();
 
     if (!isInitialized) {
       // Generate and store initial data
-      mockJobs = generateMockJobs()
-      mockCandidates = generateMockCandidates(mockJobs)
-      mockAssessments = generateMockAssessments(mockJobs)
+      mockJobs = generateMockJobs();
+      mockCandidates = generateMockCandidates(mockJobs);
+      mockAssessments = generateMockAssessments(mockJobs);
 
-      await talentFlowDB.putMany("jobs", mockJobs)
-      await talentFlowDB.putMany("candidates", mockCandidates)
-      await talentFlowDB.putMany("assessments", mockAssessments)
-      await talentFlowDB.markInitialized()
+      await talentFlowDB.putMany("jobs", mockJobs);
+      await talentFlowDB.putMany("candidates", mockCandidates);
+      await talentFlowDB.putMany("assessments", mockAssessments);
+      await talentFlowDB.markInitialized();
     } else {
       // Load existing data
-      mockJobs = await talentFlowDB.get<Job>("jobs")
-      mockCandidates = await talentFlowDB.get<Candidate>("candidates")
-      mockAssessments = await talentFlowDB.get<Assessment>("assessments")
+      mockJobs = await talentFlowDB.get<Job>("jobs");
+      mockCandidates = await talentFlowDB.get<Candidate>("candidates");
+      mockAssessments = await talentFlowDB.get<Assessment>("assessments");
     }
   } catch (error) {
-    console.error("Failed to initialize IndexedDB, falling back to localStorage:", error)
+    console.error(
+      "Failed to initialize IndexedDB, falling back to localStorage:",
+      error,
+    );
     // Fallback to localStorage if IndexedDB fails
-    const stored = localStorage.getItem("talentflow-mock-data")
+    const stored = localStorage.getItem("talentflow-mock-data");
     if (stored) {
-      const data = JSON.parse(stored)
-      mockJobs = data.jobs || []
-      mockCandidates = data.candidates || []
-      mockAssessments = data.assessments || []
+      const data = JSON.parse(stored);
+      mockJobs = data.jobs || [];
+      mockCandidates = data.candidates || [];
+      mockAssessments = data.assessments || [];
     } else {
-      mockJobs = generateMockJobs()
-      mockCandidates = generateMockCandidates(mockJobs)
-      mockAssessments = generateMockAssessments(mockJobs)
+      mockJobs = generateMockJobs();
+      mockCandidates = generateMockCandidates(mockJobs);
+      mockAssessments = generateMockAssessments(mockJobs);
       localStorage.setItem(
         "talentflow-mock-data",
         JSON.stringify({
@@ -239,28 +287,31 @@ const initializeData = async () => {
           candidates: mockCandidates,
           assessments: mockAssessments,
         }),
-      )
+      );
     }
   }
-}
+};
 
 // Initialize on module load
 if (typeof window !== "undefined") {
-  initializeData()
+  initializeData();
 }
 
 // Utility functions
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-const shouldError = () => Math.random() < 0.08 // 8% error rate
-const getRandomDelay = () => Math.random() * 1000 + 200 // 200-1200ms
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const shouldError = () => Math.random() < 0.08; // 8% error rate
+const getRandomDelay = () => Math.random() * 1000 + 200; // 200-1200ms
 
 const persistData = async () => {
   try {
-    await talentFlowDB.putMany("jobs", mockJobs)
-    await talentFlowDB.putMany("candidates", mockCandidates)
-    await talentFlowDB.putMany("assessments", mockAssessments)
+    await talentFlowDB.putMany("jobs", mockJobs);
+    await talentFlowDB.putMany("candidates", mockCandidates);
+    await talentFlowDB.putMany("assessments", mockAssessments);
   } catch (error) {
-    console.error("Failed to persist to IndexedDB, falling back to localStorage:", error)
+    console.error(
+      "Failed to persist to IndexedDB, falling back to localStorage:",
+      error,
+    );
     localStorage.setItem(
       "talentflow-mock-data",
       JSON.stringify({
@@ -268,58 +319,60 @@ const persistData = async () => {
         candidates: mockCandidates,
         assessments: mockAssessments,
       }),
-    )
+    );
   }
-}
+};
 
 // Mock API functions
 export const mockApi = {
   // Jobs API
   async getJobs(params: {
-    search?: string
-    status?: string
-    page?: number
-    pageSize?: number
-    sort?: string
+    search?: string;
+    status?: string;
+    page?: number;
+    pageSize?: number;
+    sort?: string;
   }) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
     if (shouldError()) {
-      throw new Error("Failed to fetch jobs")
+      throw new Error("Failed to fetch jobs");
     }
 
-    let filteredJobs = [...mockJobs]
+    let filteredJobs = [...mockJobs];
 
     // Apply filters
     if (params.search) {
       filteredJobs = filteredJobs.filter(
         (job) =>
           job.title.toLowerCase().includes(params.search!.toLowerCase()) ||
-          job.tags.some((tag) => tag.toLowerCase().includes(params.search!.toLowerCase())),
-      )
+          job.tags.some((tag) =>
+            tag.toLowerCase().includes(params.search!.toLowerCase()),
+          ),
+      );
     }
 
     if (params.status) {
-      filteredJobs = filteredJobs.filter((job) => job.status === params.status)
+      filteredJobs = filteredJobs.filter((job) => job.status === params.status);
     }
 
     // Apply sorting
     if (params.sort) {
-      const [field, direction] = params.sort.split(":")
+      const [field, direction] = params.sort.split(":");
       filteredJobs.sort((a, b) => {
-        const aVal = a[field as keyof Job]
-        const bVal = b[field as keyof Job]
-        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0
-        return direction === "desc" ? -comparison : comparison
-      })
+        const aVal = a[field as keyof Job];
+        const bVal = b[field as keyof Job];
+        const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        return direction === "desc" ? -comparison : comparison;
+      });
     }
 
     // Apply pagination
-    const page = params.page || 1
-    const pageSize = params.pageSize || 10
-    const start = (page - 1) * pageSize
-    const end = start + pageSize
-    const paginatedJobs = filteredJobs.slice(start, end)
+    const page = params.page || 1;
+    const pageSize = params.pageSize || 10;
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    const paginatedJobs = filteredJobs.slice(start, end);
 
     return {
       data: paginatedJobs,
@@ -329,14 +382,14 @@ export const mockApi = {
         total: filteredJobs.length,
         totalPages: Math.ceil(filteredJobs.length / pageSize),
       },
-    }
+    };
   },
 
   async createJob(job: Omit<Job, "id" | "createdAt" | "updatedAt">) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
     if (shouldError()) {
-      throw new Error("Failed to create job")
+      throw new Error("Failed to create job");
     }
 
     const newJob: Job = {
@@ -344,89 +397,91 @@ export const mockApi = {
       id: `job-${Date.now()}`,
       createdAt: new Date(),
       updatedAt: new Date(),
-    }
+    };
 
-    mockJobs.push(newJob)
-    await persistData()
+    mockJobs.push(newJob);
+    await persistData();
 
-    return newJob
+    return newJob;
   },
 
   async updateJob(id: string, updates: Partial<Job>) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
     if (shouldError()) {
-      throw new Error("Failed to update job")
+      throw new Error("Failed to update job");
     }
 
-    const index = mockJobs.findIndex((job) => job.id === id)
+    const index = mockJobs.findIndex((job) => job.id === id);
     if (index === -1) {
-      throw new Error("Job not found")
+      throw new Error("Job not found");
     }
 
-    mockJobs[index] = { ...mockJobs[index], ...updates, updatedAt: new Date() }
-    await persistData()
+    mockJobs[index] = { ...mockJobs[index], ...updates, updatedAt: new Date() };
+    await persistData();
 
-    return mockJobs[index]
+    return mockJobs[index];
   },
 
   async reorderJobs(fromOrder: number, toOrder: number) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
     // Simulate occasional failures for rollback testing
     if (Math.random() < 0.1) {
-      throw new Error("Reorder operation failed")
+      throw new Error("Reorder operation failed");
     }
 
     // Find jobs to reorder
-    const fromJob = mockJobs.find((job) => job.order === fromOrder)
-    const toJob = mockJobs.find((job) => job.order === toOrder)
+    const fromJob = mockJobs.find((job) => job.order === fromOrder);
+    const toJob = mockJobs.find((job) => job.order === toOrder);
 
     if (!fromJob || !toJob) {
-      throw new Error("Jobs not found for reordering")
+      throw new Error("Jobs not found for reordering");
     }
 
     // Swap orders
-    fromJob.order = toOrder
-    toJob.order = fromOrder
+    fromJob.order = toOrder;
+    toJob.order = fromOrder;
 
-    await persistData()
+    await persistData();
 
-    return { success: true }
+    return { success: true };
   },
 
   // Candidates API
   async getCandidates(params: {
-    search?: string
-    stage?: string
-    page?: number
-    pageSize?: number
+    search?: string;
+    stage?: string;
+    page?: number;
+    pageSize?: number;
   }) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
     if (shouldError()) {
-      throw new Error("Failed to fetch candidates")
+      throw new Error("Failed to fetch candidates");
     }
 
-    let filteredCandidates = [...mockCandidates]
+    let filteredCandidates = [...mockCandidates];
 
     if (params.search) {
       filteredCandidates = filteredCandidates.filter(
         (candidate) =>
           candidate.name.toLowerCase().includes(params.search!.toLowerCase()) ||
           candidate.email.toLowerCase().includes(params.search!.toLowerCase()),
-      )
+      );
     }
 
     if (params.stage) {
-      filteredCandidates = filteredCandidates.filter((candidate) => candidate.stage === params.stage)
+      filteredCandidates = filteredCandidates.filter(
+        (candidate) => candidate.stage === params.stage,
+      );
     }
 
-    const page = params.page || 1
-    const pageSize = params.pageSize || 50
-    const start = (page - 1) * pageSize
-    const end = start + pageSize
-    const paginatedCandidates = filteredCandidates.slice(start, end)
+    const page = params.page || 1;
+    const pageSize = params.pageSize || 50;
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+    const paginatedCandidates = filteredCandidates.slice(start, end);
 
     return {
       data: paginatedCandidates,
@@ -436,33 +491,37 @@ export const mockApi = {
         total: filteredCandidates.length,
         totalPages: Math.ceil(filteredCandidates.length / pageSize),
       },
-    }
+    };
   },
 
   async updateCandidate(id: string, updates: Partial<Candidate>) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
     if (shouldError()) {
-      throw new Error("Failed to update candidate")
+      throw new Error("Failed to update candidate");
     }
 
-    const index = mockCandidates.findIndex((candidate) => candidate.id === id)
+    const index = mockCandidates.findIndex((candidate) => candidate.id === id);
     if (index === -1) {
-      throw new Error("Candidate not found")
+      throw new Error("Candidate not found");
     }
 
-    mockCandidates[index] = { ...mockCandidates[index], ...updates, updatedAt: new Date() }
-    await persistData()
+    mockCandidates[index] = {
+      ...mockCandidates[index],
+      ...updates,
+      updatedAt: new Date(),
+    };
+    await persistData();
 
-    return mockCandidates[index]
+    return mockCandidates[index];
   },
 
   async getCandidateTimeline(id: string) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
-    const candidate = mockCandidates.find((c) => c.id === id)
+    const candidate = mockCandidates.find((c) => c.id === id);
     if (!candidate) {
-      throw new Error("Candidate not found")
+      throw new Error("Candidate not found");
     }
 
     // Generate mock timeline
@@ -481,40 +540,43 @@ export const mockApi = {
         date: new Date(candidate.appliedAt.getTime() + 2 * 24 * 60 * 60 * 1000),
         description: "Application reviewed and moved to screening",
       },
-    ]
+    ];
 
-    return timeline
+    return timeline;
   },
 
   // Assessments API
   async getAssessment(jobId: string) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
-    const assessment = mockAssessments.find((a) => a.jobId === jobId)
-    return assessment || null
+    const assessment = mockAssessments.find((a) => a.jobId === jobId);
+    return assessment || null;
   },
 
   async saveAssessment(assessment: Assessment) {
-    await delay(getRandomDelay())
+    await delay(getRandomDelay());
 
     if (shouldError()) {
-      throw new Error("Failed to save assessment")
+      throw new Error("Failed to save assessment");
     }
 
-    const index = mockAssessments.findIndex((a) => a.id === assessment.id)
+    const index = mockAssessments.findIndex((a) => a.id === assessment.id);
     if (index >= 0) {
-      mockAssessments[index] = { ...assessment, updatedAt: new Date() }
+      mockAssessments[index] = { ...assessment, updatedAt: new Date() };
     } else {
-      mockAssessments.push(assessment)
+      mockAssessments.push(assessment);
     }
 
-    await persistData()
+    await persistData();
 
-    return assessment
+    return assessment;
   },
 
-  async submitAssessmentResponse(jobId: string, responses: Record<string, any>) {
-    await delay(getRandomDelay())
+  async submitAssessmentResponse(
+    jobId: string,
+    responses: Record<string, any>,
+  ) {
+    await delay(getRandomDelay());
 
     // Store in IndexedDB
     try {
@@ -522,19 +584,19 @@ export const mockApi = {
         jobId,
         responses,
         submittedAt: new Date(),
-      })
+      });
     } catch (error) {
       // Fallback to localStorage
-      const key = `assessment-response-${jobId}`
+      const key = `assessment-response-${jobId}`;
       localStorage.setItem(
         key,
         JSON.stringify({
           responses,
           submittedAt: new Date(),
         }),
-      )
+      );
     }
 
-    return { success: true }
+    return { success: true };
   },
-}
+};

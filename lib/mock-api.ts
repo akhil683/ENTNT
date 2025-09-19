@@ -343,12 +343,8 @@ export const mockApi = {
 
     // Apply filters
     if (params.search) {
-      filteredJobs = filteredJobs.filter(
-        (job) =>
-          job.title.toLowerCase().includes(params.search!.toLowerCase()) ||
-          job.tags.some((tag) =>
-            tag.toLowerCase().includes(params.search!.toLowerCase()),
-          ),
+      filteredJobs = filteredJobs.filter((job) =>
+        job.title.toLowerCase().includes(params.search!.toLowerCase()),
       );
     }
 
@@ -360,8 +356,8 @@ export const mockApi = {
     if (params.sort) {
       const [field, direction] = params.sort.split(":");
       filteredJobs.sort((a, b) => {
-        const aVal = a[field as keyof Job];
-        const bVal = b[field as keyof Job];
+        const aVal = a[field as keyof Job] || 0;
+        const bVal = b[field as keyof Job] || 0;
         const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
         return direction === "desc" ? -comparison : comparison;
       });

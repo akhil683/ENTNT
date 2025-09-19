@@ -1,29 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers"
-import { SortableJobCard } from "./sortable-job-card"
-import { Card, CardContent } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Skeleton } from "@/components/ui/skeleton"
-import { mockApi } from "@/lib/mock-api"
-import { useAppStore } from "@/lib/store"
-import type { Job } from "@/lib/types"
-import type { DragEndEvent } from "@dnd-kit/core"
+import { useEffect, useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { SortableJobCard } from "./sortable-job-card";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import { mockApi } from "@/lib/mock-api";
+import { useAppStore } from "@/lib/store";
+import type { Job } from "@/lib/types";
+import type { DragEndEvent } from "@dnd-kit/core";
 
 interface JobsListDraggableProps {
-  jobs: Job[]
-  loading: boolean
-  error: string | null
-  onJobUpdated: () => void
+  jobs: Job[];
+  loading: boolean;
+  error: string | null;
+  onJobUpdated: () => void;
 }
 
-export function JobsListDraggable({ jobs, loading, error, onJobUpdated }: JobsListDraggableProps) {
-  const [draggedJobs, setDraggedJobs] = useState<Job[]>(jobs)
-  const [isDragging, setIsDragging] = useState(false)
-  const { updateJob } = useAppStore()
+export function JobsListDraggable({
+  jobs,
+  loading,
+  error,
+  onJobUpdated,
+}: JobsListDraggableProps) {
+  console.log("you jobs", jobs);
+  const [draggedJobs, setDraggedJobs] = useState<Job[]>(jobs);
+  const [isDragging, setIsDragging] = useState(false);
+  const { updateJob } = useAppStore();
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -34,52 +52,55 @@ export function JobsListDraggable({ jobs, loading, error, onJobUpdated }: JobsLi
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
-  )
+  );
 
   // Update local state when jobs prop changes
-  useState(() => {
-    setDraggedJobs(jobs)
-  }, [jobs])
+  useEffect(() => {
+    const sortedJobs = [...jobs].sort((a, b) => a.order - b.order);
+    setDraggedJobs(sortedJobs);
+  }, [jobs]);
 
   const handleDragStart = () => {
-    setIsDragging(true)
-  }
+    setIsDragging(true);
+  };
 
   const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event
-    setIsDragging(false)
+    const { active, over } = event;
+    setIsDragging(false);
 
-    if (!over || active.id === over.id) {
-      return
-    }
+    if (!over || active.id === over.id) return;
 
-    const oldIndex = draggedJobs.findIndex((job) => job.id === active.id)
-    const newIndex = draggedJobs.findIndex((job) => job.id === over.id)
+    const oldIndex = draggedJobs.findIndex((job) => job.id === active.id);
+    const newIndex = draggedJobs.findIndex((job) => job.id === over.id);
 
-    if (oldIndex === -1 || newIndex === -1) return
+    if (oldIndex === -1 || newIndex === -1) return;
 
     // Optimistic update
-    const newJobs = arrayMove(draggedJobs, oldIndex, newIndex)
-    setDraggedJobs(newJobs)
+    const newJobs = arrayMove(draggedJobs, oldIndex, newIndex);
+    setDraggedJobs(newJobs);
 
     try {
-      // Update order values
-      const fromJob = draggedJobs[oldIndex]
-      const toJob = draggedJobs[newIndex]
+      // Build payload with new order
+      const payload = newJobs.map((job, index) => ({
+        id: job.id,
+        order: index,
+      }));
 
-      await mockApi.reorderJobs(fromJob.order, toJob.order)
+      // Persist new order to backend
+      await mockApi.reorderJobs(payload);
 
-      // Update store
-      updateJob(fromJob.id, { order: toJob.order })
-      updateJob(toJob.id, { order: fromJob.order })
+      // Update local store (each job one by one)
+      // payload.forEach(({ id, order }) => {
+      //   updateJob(id, { order });
+      // });
 
-      onJobUpdated()
+      // Trigger any refresh logic if needed
+      // onJobUpdated();
     } catch (error) {
-      console.error("Failed to reorder jobs:", error)
-      // Rollback on failure
-      setDraggedJobs(jobs)
+      console.error("Failed to reorder jobs:", error);
+      setDraggedJobs(jobs); // rollback
     }
-  }
+  };
 
   if (loading && jobs.length === 0) {
     return (
@@ -102,7 +123,7 @@ export function JobsListDraggable({ jobs, loading, error, onJobUpdated }: JobsLi
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -110,7 +131,7 @@ export function JobsListDraggable({ jobs, loading, error, onJobUpdated }: JobsLi
       <Alert variant="destructive">
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-    )
+    );
   }
 
   if (jobs.length === 0) {
@@ -118,12 +139,16 @@ export function JobsListDraggable({ jobs, loading, error, onJobUpdated }: JobsLi
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">No jobs found</h3>
-            <p className="text-muted-foreground mb-4">Try adjusting your filters or create a new job to get started.</p>
+            <h3 className="text-lg font-semibold text-card-foreground mb-2">
+              No jobs found
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              Try adjusting your filters or create a new job to get started.
+            </p>
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -134,13 +159,21 @@ export function JobsListDraggable({ jobs, loading, error, onJobUpdated }: JobsLi
       onDragEnd={handleDragEnd}
       modifiers={[restrictToVerticalAxis]}
     >
-      <SortableContext items={draggedJobs.map((job) => job.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={draggedJobs.map((job) => job.id)}
+        strategy={verticalListSortingStrategy}
+      >
         <div className="space-y-4">
           {draggedJobs.map((job) => (
-            <SortableJobCard key={job.id} job={job} isDragging={isDragging} onJobUpdated={onJobUpdated} />
+            <SortableJobCard
+              key={job.id}
+              job={job}
+              isDragging={isDragging}
+              onJobUpdated={onJobUpdated}
+            />
           ))}
         </div>
       </SortableContext>
     </DndContext>
-  )
+  );
 }

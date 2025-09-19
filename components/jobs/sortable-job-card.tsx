@@ -1,12 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useSortable } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
-import { Card, CardHeader } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useState } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Card, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   MoreHorizontal,
   Edit,
@@ -16,23 +21,27 @@ import {
   Calendar,
   Users,
   GripVertical,
-} from "lucide-react"
-import { EditJobModal } from "./edit-job-modal"
-import { mockApi } from "@/lib/mock-api"
-import { useAppStore } from "@/lib/store"
-import type { Job } from "@/lib/types"
-import Link from "next/link"
+} from "lucide-react";
+import { EditJobModal } from "./edit-job-modal";
+import { mockApi } from "@/lib/mock-api";
+import { useAppStore } from "@/lib/store";
+import type { Job } from "@/lib/types";
+import Link from "next/link";
 
 interface SortableJobCardProps {
-  job: Job
-  isDragging: boolean
-  onJobUpdated: () => void
+  job: Job;
+  isDragging: boolean;
+  onJobUpdated: () => void;
 }
 
-export function SortableJobCard({ job, isDragging, onJobUpdated }: SortableJobCardProps) {
-  const [editingJob, setEditingJob] = useState<Job | null>(null)
-  const [updatingJobId, setUpdatingJobId] = useState<string | null>(null)
-  const { updateJob } = useAppStore()
+export function SortableJobCard({
+  job,
+  isDragging,
+  onJobUpdated,
+}: SortableJobCardProps) {
+  const [editingJob, setEditingJob] = useState<Job | null>(null);
+  const [updatingJobId, setUpdatingJobId] = useState<string | null>(null);
+  const { updateJob } = useAppStore();
 
   const {
     attributes,
@@ -43,34 +52,34 @@ export function SortableJobCard({ job, isDragging, onJobUpdated }: SortableJobCa
     isDragging: isCurrentlyDragging,
   } = useSortable({
     id: job.id,
-  })
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isCurrentlyDragging ? 0.5 : 1,
-  }
+  };
 
   const handleArchiveToggle = async (job: Job) => {
     try {
-      setUpdatingJobId(job.id)
-      const newStatus = job.status === "active" ? "archived" : "active"
+      setUpdatingJobId(job.id);
+      const newStatus = job.status === "active" ? "archived" : "active";
 
-      await mockApi.updateJob(job.id, { status: newStatus })
-      updateJob(job.id, { status: newStatus })
-      onJobUpdated()
+      await mockApi.updateJob(job.id, { status: newStatus });
+      updateJob(job.id, { status: newStatus });
+      onJobUpdated();
     } catch (error) {
-      console.error("Failed to update job status:", error)
+      console.error("Failed to update job status:", error);
     } finally {
-      setUpdatingJobId(null)
+      setUpdatingJobId(null);
     }
-  }
+  };
 
   const handleJobUpdated = (updatedJob: Job) => {
-    updateJob(updatedJob.id, updatedJob)
-    setEditingJob(null)
-    onJobUpdated()
-  }
+    updateJob(updatedJob.id, updatedJob);
+    setEditingJob(null);
+    onJobUpdated();
+  };
 
   return (
     <>
@@ -102,7 +111,11 @@ export function SortableJobCard({ job, isDragging, onJobUpdated }: SortableJobCa
                   </Link>
                   <Badge
                     variant={job.status === "active" ? "default" : "secondary"}
-                    className={job.status === "active" ? "bg-primary text-primary-foreground" : ""}
+                    className={
+                      job.status === "active"
+                        ? "bg-primary text-primary-foreground"
+                        : ""
+                    }
                   >
                     {job.status}
                   </Badge>
@@ -115,12 +128,15 @@ export function SortableJobCard({ job, isDragging, onJobUpdated }: SortableJobCa
                   </div>
                   <div className="flex items-center gap-1">
                     <Users className="h-4 w-4" />
-                    {Math.floor(Math.random() * 50) + 10} applicants
+                    {/* {Math.floor(Math.random() * 50) + 10} applicants */}
+                    10 applicants
                   </div>
                 </div>
 
                 {job.description && (
-                  <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{job.description}</p>
+                  <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+                    {job.description}
+                  </p>
                 )}
 
                 <div className="flex items-center gap-2 flex-wrap">
@@ -135,7 +151,11 @@ export function SortableJobCard({ job, isDragging, onJobUpdated }: SortableJobCa
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" disabled={updatingJobId === job.id}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={updatingJobId === job.id}
+                >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -178,5 +198,5 @@ export function SortableJobCard({ job, isDragging, onJobUpdated }: SortableJobCa
         />
       )}
     </>
-  )
+  );
 }

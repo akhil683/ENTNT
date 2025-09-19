@@ -1,6 +1,5 @@
 "use client";
 
-import { Sidebar } from "@/components/layout/sidebar";
 import {
   Card,
   CardContent,
@@ -51,33 +50,6 @@ export default function Dashboard() {
     },
   ];
 
-  const recentActivity = [
-    {
-      action: "New application",
-      candidate: "Sarah Johnson",
-      job: "Senior Frontend Developer",
-      time: "2 hours ago",
-    },
-    {
-      action: "Interview scheduled",
-      candidate: "Michael Chen",
-      job: "Backend Engineer",
-      time: "4 hours ago",
-    },
-    {
-      action: "Offer sent",
-      candidate: "Emily Davis",
-      job: "UX Designer",
-      time: "1 day ago",
-    },
-    {
-      action: "Assessment completed",
-      candidate: "David Wilson",
-      job: "Full Stack Developer",
-      time: "2 days ago",
-    },
-  ];
-
   return (
     <main className="flex-1 overflow-auto">
       <div className="p-8">
@@ -91,7 +63,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {stats.map((stat) => (
             <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -112,91 +84,53 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-card-foreground">
-                Quick Actions
-              </CardTitle>
-              <CardDescription>Common tasks to get you started</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Link href="/jobs">
-                <Button
-                  variant="outline"
-                  className="w-full justify-between bg-transparent"
-                >
-                  <div className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    Create New Job
-                  </div>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/candidates">
-                <Button
-                  variant="outline"
-                  className="w-full justify-between bg-transparent"
-                >
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4" />
-                    View All Candidates
-                  </div>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/assessments">
-                <Button
-                  variant="outline"
-                  className="w-full justify-between bg-transparent"
-                >
-                  <div className="flex items-center gap-2">
-                    <ClipboardList className="h-4 w-4" />
-                    Build Assessment
-                  </div>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-
-          {/* Recent Activity */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-card-foreground">
-                Recent Activity
-              </CardTitle>
-              <CardDescription>
-                Latest updates from your hiring pipeline
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="h-2 w-2 rounded-full bg-primary mt-2" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-card-foreground">
-                        <span className="font-medium">{activity.action}</span>{" "}
-                        for{" "}
-                        <span className="font-medium">
-                          {activity.candidate}
-                        </span>
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {activity.job}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {activity.time}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-card-foreground">
+              Quick Actions
+            </CardTitle>
+            <CardDescription>Common tasks to get you started</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Link href="/jobs">
+              <Button
+                variant="outline"
+                className="w-full justify-between bg-transparent"
+              >
+                <div className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  Create New Job
+                </div>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/candidates">
+              <Button
+                variant="outline"
+                className="w-full justify-between bg-transparent"
+              >
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  View All Candidates
+                </div>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/assessments">
+              <Button
+                variant="outline"
+                className="w-full justify-between bg-transparent"
+              >
+                <div className="flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4" />
+                  Build Assessment
+                </div>
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     </main>
   );

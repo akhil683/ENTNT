@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sidebar } from "@/components/layout/sidebar";
 import { JobsList } from "@/components/jobs/jobs-list";
 import { JobFilters } from "@/components/jobs/job-filters";
 import { CreateJobModal } from "@/components/jobs/create-job-modal";
@@ -46,7 +45,7 @@ export default function JobsPage() {
         page: currentPage,
         pageSize: 10,
       });
-
+      console.log("job response", response);
       setJobs(response.data);
       setPagination(response.pagination);
     } catch (error) {

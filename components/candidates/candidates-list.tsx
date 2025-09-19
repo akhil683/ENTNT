@@ -1,50 +1,65 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { MoreHorizontal, Mail, Calendar, MessageSquare, ExternalLink } from "lucide-react"
-import { useAppStore } from "@/lib/store"
-import { mockApi } from "@/lib/mock-api"
-import type { Candidate, CandidateStage } from "@/lib/types"
-import Link from "next/link"
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  MoreHorizontal,
+  Mail,
+  Calendar,
+  MessageSquare,
+  ExternalLink,
+} from "lucide-react";
+import { useAppStore } from "@/lib/store";
+import { mockApi } from "@/lib/mock-api";
+import type { Candidate, CandidateStage } from "@/lib/types";
+import Link from "next/link";
 
 interface CandidatesListProps {
-  candidates: Candidate[]
-  loading: boolean
-  error: string | null
-  onCandidateUpdated: (candidate: Candidate) => void
+  candidates: Candidate[];
+  loading: boolean;
+  error: string | null;
+  onCandidateUpdated: (candidate: Candidate) => void;
 }
 
 const stages = [
   { value: "applied", label: "Applied", color: "bg-blue-100 text-blue-800" },
-  { value: "screen", label: "Screening", color: "bg-yellow-100 text-yellow-800" },
+  {
+    value: "screen",
+    label: "Screening",
+    color: "bg-yellow-100 text-yellow-800",
+  },
   { value: "tech", label: "Technical", color: "bg-purple-100 text-purple-800" },
   { value: "offer", label: "Offer", color: "bg-orange-100 text-orange-800" },
   { value: "hired", label: "Hired", color: "bg-green-100 text-green-800" },
   { value: "rejected", label: "Rejected", color: "bg-red-100 text-red-800" },
-]
+];
 
 interface CandidateCardProps {
-  candidate: Candidate
-  job: any
-  onStageChange: (candidate: Candidate, newStage: CandidateStage) => void
+  candidate: Candidate;
+  job: any;
+  onStageChange: (candidate: Candidate, newStage: CandidateStage) => void;
 }
 
 function CandidateCard({ candidate, job, onStageChange }: CandidateCardProps) {
-  const stage = stages.find((s) => s.value === candidate.stage)
+  const stage = stages.find((s) => s.value === candidate.stage);
 
   const getInitials = (name: string) => {
     return name
       .split(" ")
       .map((n) => n[0])
       .join("")
-      .toUpperCase()
-  }
+      .toUpperCase();
+  };
 
   return (
     <Card className="hover:shadow-md transition-shadow mb-4">
@@ -66,7 +81,10 @@ function CandidateCard({ candidate, job, onStageChange }: CandidateCardProps) {
                   {candidate.name}
                 </Link>
                 {stage && (
-                  <Badge variant="secondary" className={`text-xs ${stage.color}`}>
+                  <Badge
+                    variant="secondary"
+                    className={`text-xs ${stage.color}`}
+                  >
                     {stage.label}
                   </Badge>
                 )}
@@ -79,16 +97,24 @@ function CandidateCard({ candidate, job, onStageChange }: CandidateCardProps) {
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  <span>Applied {new Date(candidate.appliedAt).toLocaleDateString()}</span>
+                  <span>
+                    Applied {new Date(candidate.appliedAt).toLocaleDateString()}
+                  </span>
                 </div>
               </div>
 
-              {job && <p className="text-xs text-muted-foreground mt-1">Applied for: {job.title}</p>}
+              {job && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Applied for: {job.title}
+                </p>
+              )}
 
               {candidate.notes && candidate.notes.length > 0 && (
                 <div className="flex items-center gap-1 mt-2">
                   <MessageSquare className="h-3 w-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">{candidate.notes.length} note(s)</span>
+                  <span className="text-xs text-muted-foreground">
+                    {candidate.notes.length} note(s)
+                  </span>
                 </div>
               )}
             </div>
@@ -112,7 +138,9 @@ function CandidateCard({ candidate, job, onStageChange }: CandidateCardProps) {
                 .map((stage) => (
                   <DropdownMenuItem
                     key={stage.value}
-                    onClick={() => onStageChange(candidate, stage.value as CandidateStage)}
+                    onClick={() =>
+                      onStageChange(candidate, stage.value as CandidateStage)
+                    }
                   >
                     Move to {stage.label}
                   </DropdownMenuItem>
@@ -122,24 +150,37 @@ function CandidateCard({ candidate, job, onStageChange }: CandidateCardProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export function CandidatesList({ candidates, loading, error, onCandidateUpdated }: CandidatesListProps) {
-  const [updatingCandidateId, setUpdatingCandidateId] = useState<string | null>(null)
-  const { jobs } = useAppStore()
+export function CandidatesList({
+  candidates,
+  loading,
+  error,
+  onCandidateUpdated,
+}: CandidatesListProps) {
+  const [updatingCandidateId, setUpdatingCandidateId] = useState<string | null>(
+    null,
+  );
+  console.log("candidates", candidates);
+  const { jobs } = useAppStore();
 
-  const handleStageChange = async (candidate: Candidate, newStage: CandidateStage) => {
+  const handleStageChange = async (
+    candidate: Candidate,
+    newStage: CandidateStage,
+  ) => {
     try {
-      setUpdatingCandidateId(candidate.id)
-      const updatedCandidate = await mockApi.updateCandidate(candidate.id, { stage: newStage })
-      onCandidateUpdated(updatedCandidate)
+      setUpdatingCandidateId(candidate.id);
+      const updatedCandidate = await mockApi.updateCandidate(candidate.id, {
+        stage: newStage,
+      });
+      onCandidateUpdated(updatedCandidate);
     } catch (error) {
-      console.error("Failed to update candidate stage:", error)
+      console.error("Failed to update candidate stage:", error);
     } finally {
-      setUpdatingCandidateId(null)
+      setUpdatingCandidateId(null);
     }
-  }
+  };
 
   if (loading && candidates.length === 0) {
     return (
@@ -158,36 +199,47 @@ export function CandidatesList({ candidates, loading, error, onCandidateUpdated 
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    )
-  }
+  // if (error) {
+  //   return (
+  //     <Alert variant="destructive">
+  //       <AlertDescription>{error}</AlertDescription>
+  //     </Alert>
+  //   );
+  // }
 
   if (candidates.length === 0) {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">No candidates found</h3>
-            <p className="text-muted-foreground">Try adjusting your filters to see more candidates.</p>
+            <h3 className="text-lg font-semibold text-card-foreground mb-2">
+              No candidates found
+            </h3>
+            <p className="text-muted-foreground">
+              Try adjusting your filters to see more candidates.
+            </p>
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
     <div className="max-h-[600px] overflow-y-auto space-y-4 pr-2">
       {candidates.map((candidate) => {
-        const job = jobs.find((j) => j.id === candidate.jobId)
-        return <CandidateCard key={candidate.id} candidate={candidate} job={job} onStageChange={handleStageChange} />
+        const job = jobs.find((j) => j.id === candidate.jobId);
+        return (
+          <CandidateCard
+            key={candidate.id}
+            candidate={candidate}
+            job={job}
+            onStageChange={handleStageChange}
+          />
+        );
       })}
     </div>
-  )
+  );
 }

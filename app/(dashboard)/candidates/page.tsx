@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Sidebar } from "@/components/layout/sidebar";
 import { CandidatesList } from "@/components/candidates/candidates-list";
 import { CandidatesFilters } from "@/components/candidates/candidates-filters";
 import { CandidatesKanban } from "@/components/candidates/candidates-kanban";

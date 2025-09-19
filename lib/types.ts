@@ -1,7 +1,7 @@
-import { z } from "zod"
+import { z } from "zod";
 
 // Job schemas
-export const JobStatus = z.enum(["active", "archived"])
+export const JobStatus = z.enum(["active", "archived"]);
 export const JobSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Title is required"),
@@ -13,17 +13,24 @@ export const JobSchema = z.object({
   requirements: z.array(z.string()).optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
-})
+});
 
-export type Job = z.infer<typeof JobSchema>
+export type Job = z.infer<typeof JobSchema>;
 
 // Candidate schemas
-export const CandidateStage = z.enum(["applied", "screen", "tech", "offer", "hired", "rejected"])
+export const CandidateStageSchema = z.enum([
+  "applied",
+  "screen",
+  "tech",
+  "offer",
+  "hired",
+  "rejected",
+]);
 export const CandidateSchema = z.object({
   id: z.string(),
   name: z.string(),
   email: z.string().email(),
-  stage: CandidateStage,
+  stage: CandidateStageSchema,
   jobId: z.string(),
   appliedAt: z.date(),
   updatedAt: z.date(),
@@ -37,9 +44,10 @@ export const CandidateSchema = z.object({
       }),
     )
     .optional(),
-})
+});
 
-export type Candidate = z.infer<typeof CandidateSchema>
+export type CandidateStage = z.infer<typeof CandidateStageSchema>;
+export type Candidate = z.infer<typeof CandidateSchema>;
 
 // Assessment schemas
 export const QuestionType = z.enum([
@@ -49,7 +57,7 @@ export const QuestionType = z.enum([
   "long-text",
   "numeric",
   "file-upload",
-])
+]);
 
 export const QuestionSchema = z.object({
   id: z.string(),
@@ -72,14 +80,14 @@ export const QuestionSchema = z.object({
       showWhen: z.string(), // Value to match
     })
     .optional(),
-})
+});
 
 export const AssessmentSectionSchema = z.object({
   id: z.string(),
   title: z.string(),
   description: z.string().optional(),
   questions: z.array(QuestionSchema),
-})
+});
 
 export const AssessmentSchema = z.object({
   id: z.string(),
@@ -89,11 +97,11 @@ export const AssessmentSchema = z.object({
   sections: z.array(AssessmentSectionSchema),
   createdAt: z.date(),
   updatedAt: z.date(),
-})
+});
 
-export type Question = z.infer<typeof QuestionSchema>
-export type AssessmentSection = z.infer<typeof AssessmentSectionSchema>
-export type Assessment = z.infer<typeof AssessmentSchema>
+export type Question = z.infer<typeof QuestionSchema>;
+export type AssessmentSection = z.infer<typeof AssessmentSectionSchema>;
+export type Assessment = z.infer<typeof AssessmentSchema>;
 
 // API Response schemas
 export const PaginatedResponse = <T extends z.ZodTypeAny>(itemSchema: T) =>
@@ -105,7 +113,11 @@ export const PaginatedResponse = <T extends z.ZodTypeAny>(itemSchema: T) =>
       total: z.number(),
       totalPages: z.number(),
     }),
-  })
+  });
 
-export type PaginatedJobsResponse = z.infer<ReturnType<typeof PaginatedResponse<typeof JobSchema>>>
-export type PaginatedCandidatesResponse = z.infer<ReturnType<typeof PaginatedResponse<typeof CandidateSchema>>>
+export type PaginatedJobsResponse = z.infer<
+  ReturnType<typeof PaginatedResponse<typeof JobSchema>>
+>;
+export type PaginatedCandidatesResponse = z.infer<
+  ReturnType<typeof PaginatedResponse<typeof CandidateSchema>>
+>;

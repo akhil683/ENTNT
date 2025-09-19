@@ -25,6 +25,7 @@ interface AppState {
   setJobs: (jobs: Job[]) => void;
   addJob: (job: Job) => void;
   updateJob: (id: string, updates: Partial<Job>) => void;
+  updateJobs: (changes: { id: string; changes: Partial<Job> }[]) => void;
   deleteJob: (id: string) => void;
   setSelectedJob: (job: Job | null) => void;
   setJobsLoading: (loading: boolean) => void;
@@ -73,6 +74,13 @@ export const useAppStore = create<AppState>()(
             jobs: state.jobs.map((job) =>
               job.id === id ? { ...job, ...updates } : job,
             ),
+          })),
+        updateJobs: (updates: { id: string; changes: Partial<Job> }[]) =>
+          set((state) => ({
+            jobs: state.jobs.map((job) => {
+              const found = updates.find((u) => u.id === job.id);
+              return found ? { ...job, ...found.changes } : job;
+            }),
           })),
         deleteJob: (id) =>
           set((state) => ({

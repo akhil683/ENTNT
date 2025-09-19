@@ -419,26 +419,20 @@ export const mockApi = {
     return mockJobs[index];
   },
 
-  async reorderJobs(fromOrder: number, toOrder: number) {
-    await delay(getRandomDelay());
+  async reorderJobs(updatedJobs: { id: string; order: number }[]) {
+    // await delay(getRandomDelay());
 
     // Simulate occasional failures for rollback testing
-    if (Math.random() < 0.1) {
-      throw new Error("Reorder operation failed");
-    }
-
-    // Find jobs to reorder
-    const fromJob = mockJobs.find((job) => job.order === fromOrder);
-    const toJob = mockJobs.find((job) => job.order === toOrder);
-
-    if (!fromJob || !toJob) {
-      throw new Error("Jobs not found for reordering");
-    }
-
-    // Swap orders
-    fromJob.order = toOrder;
-    toJob.order = fromOrder;
-
+    // if (Math.random() < 0.1) {
+    //   throw new Error("Reorder operation failed");
+    // }
+    updatedJobs.forEach(({ id, order }) => {
+      const job = mockJobs.find((j) => j.id === id);
+      if (job) {
+        job.order = order;
+      }
+    });
+    console.log("reorder", mockJobs);
     await persistData();
 
     return { success: true };

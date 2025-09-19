@@ -56,7 +56,8 @@ export function JobsListDraggable({
 
   // Update local state when jobs prop changes
   useEffect(() => {
-    setDraggedJobs(jobs);
+    const sortedJobs = [...jobs].sort((a, b) => a.order - b.order);
+    setDraggedJobs(sortedJobs);
   }, [jobs]);
 
   const handleDragStart = () => {
@@ -67,9 +68,7 @@ export function JobsListDraggable({
     const { active, over } = event;
     setIsDragging(false);
 
-    if (!over || active.id === over.id) {
-      return;
-    }
+    if (!over || active.id === over.id) return;
 
     const oldIndex = draggedJobs.findIndex((job) => job.id === active.id);
     const newIndex = draggedJobs.findIndex((job) => job.id === over.id);
@@ -81,21 +80,25 @@ export function JobsListDraggable({
     setDraggedJobs(newJobs);
 
     try {
-      // Update order values
-      const fromJob = draggedJobs[oldIndex];
-      const toJob = draggedJobs[newIndex];
+      // Build payload with new order
+      const payload = newJobs.map((job, index) => ({
+        id: job.id,
+        order: index,
+      }));
 
-      await mockApi.reorderJobs(fromJob.order, toJob.order);
+      // Persist new order to backend
+      await mockApi.reorderJobs(payload);
 
-      // Update store
-      updateJob(fromJob.id, { order: toJob.order });
-      updateJob(toJob.id, { order: fromJob.order });
+      // Update local store (each job one by one)
+      // payload.forEach(({ id, order }) => {
+      //   updateJob(id, { order });
+      // });
 
-      onJobUpdated();
+      // Trigger any refresh logic if needed
+      // onJobUpdated();
     } catch (error) {
       console.error("Failed to reorder jobs:", error);
-      // Rollback on failure
-      setDraggedJobs(jobs);
+      setDraggedJobs(jobs); // rollback
     }
   };
 

@@ -191,7 +191,12 @@ export function CreateJobModal({
                 onKeyPress={handleKeyPress}
                 className="bg-input"
               />
-              <Button type="button" onClick={addTag} variant="outline">
+              <Button
+                type="button"
+                onClick={addTag}
+                variant="outline"
+                className="cursor-pointer"
+              >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
@@ -207,7 +212,7 @@ export function CreateJobModal({
                     <button
                       type="button"
                       onClick={() => removeTag(tag)}
-                      className="ml-1 hover:text-destructive"
+                      className="ml-1 hover:text-destructive cursor-pointer"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -223,13 +228,14 @@ export function CreateJobModal({
               variant="outline"
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
             <Button
               onClick={onSubmit}
               disabled={isSubmitting}
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 cursor-pointer"
             >
               {isSubmitting ? "Creating..." : "Create Job"}
             </Button>

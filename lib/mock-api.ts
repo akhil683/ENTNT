@@ -333,7 +333,7 @@ export const mockApi = {
     pageSize?: number;
     sort?: string;
   }) {
-    await delay(getRandomDelay());
+    // await delay(getRandomDelay());
 
     if (shouldError()) {
       throw new Error("Failed to fetch jobs");

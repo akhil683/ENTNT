@@ -1,3 +1,5 @@
+import { Assessment, Candidate, Job } from "./types";
+
 // IndexedDB service for local persistence
 export interface DBSchema {
   jobs: Job[];
@@ -160,4 +162,3 @@ class TalentFlowDB {
 export const talentFlowDB = new TalentFlowDB();
 
 // Import types
-import type { Job, Candidate, Assessment } from "./types";

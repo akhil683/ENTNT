@@ -11,13 +11,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   MoreHorizontal,
   Mail,
   Calendar,
   MessageSquare,
   ExternalLink,
+  Loader2,
 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { mockApi } from "@/lib/mock-api";
@@ -212,18 +212,21 @@ export function CandidatesList({
 
   if (candidates.length === 0) {
     return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">
-              No candidates found
-            </h3>
-            <p className="text-muted-foreground">
-              Try adjusting your filters to see more candidates.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="w-full flex justify-center i items-center mt-12">
+        <Loader2 className="animate-spin" />
+        {/* <Card> */}
+        {/*   <CardContent className="flex flex-col items-center justify-center py-12"> */}
+        {/*     <div className="text-center"> */}
+        {/*       <h3 className="text-lg font-semibold text-card-foreground mb-2"> */}
+        {/*         No candidates found */}
+        {/*       </h3> */}
+        {/*       <p className="text-muted-foreground"> */}
+        {/*         Try adjusting your filters to see more candidates. */}
+        {/*       </p> */}
+        {/*     </div> */}
+        {/*   </CardContent> */}
+        {/* </Card> */}
+      </div>
     );
   }
 

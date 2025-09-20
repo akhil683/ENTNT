@@ -87,7 +87,7 @@ export default function JobsPage() {
           </div>
           <Button
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 cursor-pointer"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Job

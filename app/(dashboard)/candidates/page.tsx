@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { CandidatesList } from "@/components/candidates/candidates-list";
 import { CandidatesFilters } from "@/components/candidates/candidates-filters";
 import { CandidatesKanban } from "@/components/candidates/candidates-kanban";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { List, Kanban } from "lucide-react";
+import { List, Kanban, Loader2 } from "lucide-react";
 import { useAppStore } from "@/lib/store";
 import { mockApi } from "@/lib/mock-api";
 import type { Candidate } from "@/lib/types";
@@ -16,10 +17,6 @@ export default function CandidatesPage() {
   const jobFilter = searchParams.get("job");
 
   const [view, setView] = useState<"list" | "kanban">("list");
-  const [allCandidates, setAllCandidates] = useState<Candidate[]>([]);
-  const [filteredCandidates, setFilteredCandidates] = useState<Candidate[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [filters, setFilters] = useState({
     search: "",
@@ -29,47 +26,35 @@ export default function CandidatesPage() {
 
   const { jobs } = useAppStore();
 
-  // Load all candidates on mount
-  useEffect(() => {
-    const loadAllCandidates = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Load all candidates in batches
-        const allCandidatesData: Candidate[] = [];
-        let page = 1;
-        let hasMore = true;
-
-        while (hasMore) {
-          const response = await mockApi.getCandidates({
-            page,
-            pageSize: 100, // Load in larger batches
-          });
-
-          allCandidatesData.push(...response.data);
-          hasMore = page < response.pagination.totalPages;
-          page++;
-        }
-
-        setAllCandidates(allCandidatesData);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load candidates",
-        );
-      } finally {
-        setLoading(false);
+  const {
+    data,
+    error,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["candidates"],
+    queryFn: async ({ pageParam = 1 }) =>
+      mockApi.getCandidates({ page: pageParam, pageSize: 100 }),
+    getNextPageParam: (lastPage, allPages) => {
+      if (allPages.length < lastPage.pagination.totalPages) {
+        return allPages.length + 1;
       }
-    };
+      return undefined;
+    },
+    initialPageParam: 1,
+  });
 
-    loadAllCandidates();
-  }, []);
+  // Flatten candidates across pages
+  const allCandidates: Candidate[] = data
+    ? data.pages.flatMap((page) => page.data)
+    : [];
 
   // Client-side filtering
-  const filteredData = useMemo(() => {
+  const filteredCandidates = useMemo(() => {
     let filtered = [...allCandidates];
 
-    // Search filter (client-side)
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       filtered = filtered.filter(
@@ -79,14 +64,12 @@ export default function CandidatesPage() {
       );
     }
 
-    // Stage filter
     if (filters.stage) {
       filtered = filtered.filter(
         (candidate) => candidate.stage === filters.stage,
       );
     }
 
-    // Job filter
     if (filters.jobId) {
       filtered = filtered.filter(
         (candidate) => candidate.jobId === filters.jobId,
@@ -96,16 +79,15 @@ export default function CandidatesPage() {
     return filtered;
   }, [allCandidates, filters]);
 
-  useEffect(() => {
-    setFilteredCandidates(filteredData);
-  }, [filteredData]);
-
   const handleCandidateUpdated = (updatedCandidate: Candidate) => {
-    setAllCandidates((prev) =>
-      prev.map((candidate) =>
-        candidate.id === updatedCandidate.id ? updatedCandidate : candidate,
-      ),
-    );
+    // Optimistically update candidate in the current list
+    // (if you later persist this, sync with mockApi/db)
+    if (!data) return;
+    data.pages.forEach((page) => {
+      page.data = page.data.map((c) =>
+        c.id === updatedCandidate.id ? updatedCandidate : c,
+      );
+    });
   };
 
   return (
@@ -143,30 +125,50 @@ export default function CandidatesPage() {
           <CandidatesFilters
             filters={filters}
             onFiltersChange={setFilters}
-            loading={loading}
+            loading={isLoading}
             jobs={jobs}
             totalCount={filteredCandidates.length}
           />
 
-          <Tabs value={view} className="w-full">
-            <TabsContent value="list" className="mt-0">
-              <CandidatesList
-                candidates={filteredCandidates}
-                loading={loading}
-                error={error}
-                onCandidateUpdated={handleCandidateUpdated}
-              />
-            </TabsContent>
+          {isLoading ? (
+            <div className="w-full flex justify-center items-center">
+              <Loader2 className="animate-spin mt-16" />
+            </div>
+          ) : error ? (
+            <p className="text-red-500">Failed to load candidates</p>
+          ) : (
+            <Tabs value={view} className="w-full">
+              <TabsContent value="list" className="mt-0">
+                <CandidatesList
+                  candidates={filteredCandidates}
+                  loading={isLoading}
+                  error={error}
+                  onCandidateUpdated={handleCandidateUpdated}
+                />
+              </TabsContent>
 
-            <TabsContent value="kanban" className="mt-0">
-              <CandidatesKanban
-                candidates={filteredCandidates}
-                loading={loading}
-                error={error}
-                onCandidateUpdated={handleCandidateUpdated}
-              />
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="kanban" className="mt-0">
+                <CandidatesKanban
+                  candidates={filteredCandidates}
+                  loading={isLoading}
+                  error={error}
+                  onCandidateUpdated={handleCandidateUpdated}
+                />
+              </TabsContent>
+            </Tabs>
+          )}
+
+          {hasNextPage && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="px-4 py-2 rounded bg-primary text-white hover:bg-primary/90 disabled:opacity-50"
+              >
+                {isFetchingNextPage ? "Loading more..." : "Load More"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </main>

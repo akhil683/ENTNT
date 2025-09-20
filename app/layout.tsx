@@ -4,6 +4,8 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Suspense } from "react";
 import "./globals.css";
+import ReactQueryProvider from "@/components/provider/QueryProvider";
+import ClientProvider from "@/components/provider/ClientProvider";
 
 export const metadata: Metadata = {
   title: "TalentFlow - Hiring Platform",
@@ -17,9 +19,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={null}>{children}</Suspense>
-      </body>
+      <ReactQueryProvider>
+        <ClientProvider>
+          <body
+            className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}
+          >
+            <Suspense fallback={null}>{children}</Suspense>
+          </body>
+        </ClientProvider>
+      </ReactQueryProvider>
     </html>
   );
 }

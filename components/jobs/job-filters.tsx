@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Search, X, ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 interface JobFiltersProps {
   filters: {
@@ -29,6 +30,7 @@ export function JobFilters({
   onFiltersChange,
   loading,
 }: JobFiltersProps) {
+  const [searchText, setSearchText] = useState("");
   const handleSearchChange = (value: string) => {
     onFiltersChange({ ...filters, search: value });
   };
@@ -72,24 +74,30 @@ export function JobFilters({
   return (
     <div className="bg-card rounded-lg border border-border p-6">
       <div className="flex items-center gap-4 flex-wrap">
-        <div className="flex-1 min-w-[300px]">
-          <div className="relative">
+        <div className="flex-1 flex gap-2 min-w-[300px]">
+          <div className="relative w-full border border-border rounded-lg overflow-hidden">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search jobs by title or tags..."
-              value={filters.search}
-              onChange={(e) => handleSearchChange(e.target.value)}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
               className="pl-10 bg-input"
               disabled={loading}
             />
           </div>
+          <Button
+            className="cursor-pointer"
+            onClick={() => handleSearchChange(searchText)}
+          >
+            Search
+          </Button>
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="w-[150px] justify-between bg-input"
+              className="w-[150px] justify-between bg-input border border-border cursor-pointer"
               disabled={loading}
             >
               {getStatusLabel()}
@@ -113,7 +121,7 @@ export function JobFilters({
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="w-[180px] justify-between bg-input"
+              className="w-[180px] justify-between bg-input border border-border cursor-pointer"
               disabled={loading}
             >
               {getSortLabel()}

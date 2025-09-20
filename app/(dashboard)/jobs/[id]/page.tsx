@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Sidebar } from "@/components/layout/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -61,7 +60,10 @@ export default function JobDetailPage() {
 
     try {
       setUpdating(true);
-      const newStatus = job.status === "active" ? "archived" : "active";
+      const newStatus =
+        job.status === "active"
+          ? "archived"
+          : ("active" as "active" | "archived");
 
       await mockApi.updateJob(job.id, { status: newStatus });
       const updatedJob = { ...job, status: newStatus };

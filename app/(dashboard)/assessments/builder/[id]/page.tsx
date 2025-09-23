@@ -27,14 +27,12 @@ export default function EditAssessmentPage() {
     const loadAssessment = async () => {
       try {
         setLoading(true);
-        // Find assessment in store
         const existingAssessment = assessments.find(
           (a) => a.id === assessmentId,
         );
         if (existingAssessment) {
           setAssessment(existingAssessment);
         } else {
-          // In a real app, you'd fetch from API
           setAssessment(null);
         }
       } catch (error) {
@@ -92,7 +90,7 @@ export default function EditAssessmentPage() {
               className="bg-primary hover:bg-primary/90"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Assessments
+              Back
             </Button>
           </div>
         </div>
@@ -109,7 +107,7 @@ export default function EditAssessmentPage() {
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={() => router.push("/assessments")}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Assessments
+              Back
             </Button>
 
             <div className="h-6 w-px bg-border" />

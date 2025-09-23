@@ -76,6 +76,7 @@ export function AssessmentPreview({ assessment }: AssessmentPreviewProps) {
                       <Checkbox
                         id={`${question.id}-${index}`}
                         checked={(response || []).includes(option)}
+                        className="bg-gray-500"
                         onCheckedChange={(checked) => {
                           const currentResponse = response || []
                           if (checked) {

@@ -89,11 +89,9 @@ export default function CandidateDetailPage() {
     const loadCandidate = async () => {
       try {
         setLoading(true);
-        // Find candidate in store
         const existingCandidate = candidates.find((c) => c.id === candidateId);
         if (existingCandidate) {
           setCandidate(existingCandidate);
-          // Load timeline
           const timelineData = await mockApi.getCandidateTimeline(candidateId);
           setTimeline(timelineData);
         } else {

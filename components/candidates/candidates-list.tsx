@@ -182,7 +182,7 @@ export function CandidatesList({
     }
   };
 
-  if (loading && candidates.length === 0) {
+  if (loading || candidates.length === 0) {
     return (
       <div className="space-y-4">
         {Array.from({ length: 10 }).map((_, i) => (
@@ -199,31 +199,6 @@ export function CandidatesList({
           </Card>
         ))}
       </div>
-    );
-  }
-
-  // if (error) {
-  //   return (
-  //     <Alert variant="destructive">
-  //       <AlertDescription>{error}</AlertDescription>
-  //     </Alert>
-  //   );
-  // }
-
-  if (candidates.length === 0) {
-    return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">
-              No candidates found
-            </h3>
-            <p className="text-muted-foreground">
-              Try adjusting your filters to see more candidates.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
     );
   }
 

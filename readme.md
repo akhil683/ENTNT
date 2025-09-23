@@ -35,6 +35,7 @@ This is a front-end only assessment project built with:
    git clone https://github.com/akhil683/wiki-reel.git
    cd wiki-reel
    pnpm install
+   pnpm dev
    ```
 
 2. **Environment Setup**

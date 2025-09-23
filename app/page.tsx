@@ -12,6 +12,7 @@ export default function SignUp() {
   useEffect(() => {
     const username = localStorage.getItem("username")
     const password = localStorage.getItem("password")
+    if (!username || !password) return
     if (username == process.env.NEXT_PUBLIC_USERNAME  && password == process.env.NEXT_PUBLIC_PASSWORD) {
       redirect("/home")
     }

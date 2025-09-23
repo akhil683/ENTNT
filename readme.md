@@ -25,22 +25,22 @@ This is a front-end only assessment project built with:
 
 - Node.js 18+
 - pnpm (recommended) or npm
-- PostgreSQL database (or Neon account)
 
 ### Installation
 
 1. **Clone and Install**
 
    ```bash
-   git clone https://github.com/akhil683/wiki-reel.git
-   cd wiki-reel
+   git clone https://github.com/akhil683/ENTNT.git
+   cd ENTNT
    pnpm install
+   pnpm dev
    ```
 
 2. **Environment Setup**
 
    ```bash
-   cp .env.example .env.local
+   cp .env.local
    ```
 
    Fill in your environment variables:
@@ -74,5 +74,19 @@ ENTNT/
 ├── 📁 public/                # Static assets
 └── 📁 types/                 # TypeScript definitions
 ```
+
+## ⚠️ Known Issues / Limitations  
+- Authentication is mocked (not secure, only for assessment)  
+- File upload in assessments is a stub (no real file storage)  
+- No backend integration (all data is local with MirageJS + IndexedDB)  
+
+---
+
+## 📝 Technical Decisions  
+- Chose **Zustand** over Redux for simplicity and lightweight state management.  
+- Used **MirageJS** to mimic a real API and test error handling with optimistic updates + rollback.  
+- Used **IndexedDB** so that data persists after refresh (simulating a real DB).  
+- Implemented drag-and-drop with rollback to match realistic scenarios of job/candidate reordering.  
+- TailwindCSS used for fast UI development with consistent styling.  
 
 

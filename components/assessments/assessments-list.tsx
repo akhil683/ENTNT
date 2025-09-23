@@ -19,7 +19,7 @@ interface AssessmentsListProps {
 }
 
 export function AssessmentsList({ assessments, jobs, loading, error, onAssessmentUpdated }: AssessmentsListProps) {
-  if (loading && assessments.length === 0) {
+  if (loading || assessments.length === 0) {
     return (
       <div className="space-y-4">
         {Array.from({ length: 3 }).map((_, i) => (
@@ -51,25 +51,6 @@ export function AssessmentsList({ assessments, jobs, loading, error, onAssessmen
       <Alert variant="destructive">
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-    )
-  }
-
-  if (assessments.length === 0) {
-    return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="text-center">
-            <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">No assessments found</h3>
-            <p className="text-muted-foreground mb-4">
-              Create your first assessment to start evaluating candidates effectively.
-            </p>
-            <Link href="/assessments/builder">
-              <Button className="bg-primary hover:bg-primary/90">Create Assessment</Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
     )
   }
 
@@ -124,12 +105,6 @@ export function AssessmentsList({ assessments, jobs, loading, error, onAssessmen
                       <Link href={`/assessments/builder/${assessment.id}`}>
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href={`/assessments/preview/${assessment.id}`}>
-                        <Eye className="h-4 w-4 mr-2" />
-                        Preview
                       </Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>

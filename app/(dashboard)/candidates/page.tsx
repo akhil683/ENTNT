@@ -29,14 +29,12 @@ export default function CandidatesPage() {
 
   const { jobs } = useAppStore();
 
-  // Load all candidates on mount
   useEffect(() => {
     const loadAllCandidates = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Load all candidates in batches
         const allCandidatesData: Candidate[] = [];
         let page = 1;
         let hasMore = true;
@@ -44,7 +42,7 @@ export default function CandidatesPage() {
         while (hasMore) {
           const response = await mockApi.getCandidates({
             page,
-            pageSize: 100, // Load in larger batches
+            pageSize: 100, 
           });
 
           allCandidatesData.push(...response.data);
@@ -65,11 +63,9 @@ export default function CandidatesPage() {
     loadAllCandidates();
   }, []);
 
-  // Client-side filtering
   const filteredData = useMemo(() => {
     let filtered = [...allCandidates];
 
-    // Search filter (client-side)
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       filtered = filtered.filter(
@@ -79,14 +75,12 @@ export default function CandidatesPage() {
       );
     }
 
-    // Stage filter
     if (filters.stage) {
       filtered = filtered.filter(
         (candidate) => candidate.stage === filters.stage,
       );
     }
 
-    // Job filter
     if (filters.jobId) {
       filtered = filtered.filter(
         (candidate) => candidate.jobId === filters.jobId,

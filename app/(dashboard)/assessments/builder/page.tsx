@@ -29,7 +29,6 @@ export default function AssessmentBuilderPage() {
 
   const { jobs } = useAppStore();
 
-  // Initialize new assessment
   useEffect(() => {
     if (selectedJobId && !assessment) {
       const job = jobs.find((j) => j.id === selectedJobId);
@@ -84,7 +83,7 @@ export default function AssessmentBuilderPage() {
           <div className="flex items-center gap-4">
             <Button variant="ghost" onClick={() => router.push("/assessments")}>
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Assessments
+              Back
             </Button>
 
             <div className="h-6 w-px bg-border" />

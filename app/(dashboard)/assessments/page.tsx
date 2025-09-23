@@ -34,7 +34,6 @@ export default function AssessmentsPage() {
       setError(null);
       setAssessmentsError(null);
 
-      // Load assessments for all jobs
       const assessmentPromises = jobs.map(async (job) => {
         try {
           const assessment = await mockApi.getAssessment(job.id);

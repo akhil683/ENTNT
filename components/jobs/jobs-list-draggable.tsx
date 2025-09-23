@@ -38,7 +38,6 @@ export function JobsListDraggable({
   error,
   onJobUpdated,
 }: JobsListDraggableProps) {
-  console.log("you jobs", jobs);
   const [draggedJobs, setDraggedJobs] = useState<Job[]>(jobs);
   const [isDragging, setIsDragging] = useState(false);
   const { updateJob } = useAppStore();
@@ -54,7 +53,6 @@ export function JobsListDraggable({
     }),
   );
 
-  // Update local state when jobs prop changes
   useEffect(() => {
     const sortedJobs = [...jobs].sort((a, b) => a.order - b.order);
     setDraggedJobs(sortedJobs);
@@ -75,34 +73,23 @@ export function JobsListDraggable({
 
     if (oldIndex === -1 || newIndex === -1) return;
 
-    // Optimistic update
     const newJobs = arrayMove(draggedJobs, oldIndex, newIndex);
     setDraggedJobs(newJobs);
 
     try {
-      // Build payload with new order
       const payload = newJobs.map((job, index) => ({
         id: job.id,
         order: index,
       }));
 
-      // Persist new order to backend
       await mockApi.reorderJobs(payload);
-
-      // Update local store (each job one by one)
-      // payload.forEach(({ id, order }) => {
-      //   updateJob(id, { order });
-      // });
-
-      // Trigger any refresh logic if needed
-      // onJobUpdated();
     } catch (error) {
       console.error("Failed to reorder jobs:", error);
-      setDraggedJobs(jobs); // rollback
+      setDraggedJobs(jobs); 
     }
   };
 
-  if (loading && jobs.length === 0) {
+  if (loading || jobs.length === 0) {
     return (
       <div className="space-y-4">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -123,31 +110,6 @@ export function JobsListDraggable({
           </Card>
         ))}
       </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (jobs.length === 0) {
-    return (
-      <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-card-foreground mb-2">
-              No jobs found
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              Try adjusting your filters or create a new job to get started.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
     );
   }
 

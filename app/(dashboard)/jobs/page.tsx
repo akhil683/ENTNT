@@ -45,7 +45,6 @@ export default function JobsPage() {
         page: currentPage,
         pageSize: 10,
       });
-      console.log("job response", response);
       setJobs(response.data);
       setPagination(response.pagination);
     } catch (error) {
@@ -87,7 +86,7 @@ export default function JobsPage() {
           </div>
           <Button
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-primary hover:bg-primary/90"
+            className="bg-primary hover:bg-primary/90 cursor-pointer"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Job

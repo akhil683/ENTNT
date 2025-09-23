@@ -126,11 +126,6 @@ export function SortableJobCard({
                     <Calendar className="h-4 w-4" />
                     Created {new Date(job.createdAt).toLocaleDateString()}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4" />
-                    {/* {Math.floor(Math.random() * 50) + 10} applicants */}
-                    10 applicants
-                  </div>
                 </div>
 
                 {job.description && (

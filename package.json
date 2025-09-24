@@ -13,6 +13,7 @@
     "@dnd-kit/modifiers": "latest",
     "@dnd-kit/sortable": "latest",
     "@dnd-kit/utilities": "latest",
+    "@faker-js/faker": "^10.0.0",
     "@hookform/resolvers": "latest",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -52,6 +53,7 @@
     "immer": "latest",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
+    "miragejs": "^0.1.48",
     "next": "14.2.16",
     "next-themes": "^0.4.6",
     "react": "^18",
@@ -79,4 +81,3 @@
     "typescript": "^5"
   }
 }
-

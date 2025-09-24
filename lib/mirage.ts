@@ -235,33 +235,6 @@ export function makeServer({ environment = 'development' } = {}) {
         }
       });
 
-      this.get('/assessments/:jobId/responses/:candidateId', async (schema, request) => {
-        try {
-          const response = await db.getAssessmentResponse(
-            request.params.candidateId,
-            request.params.jobId
-          );
-
-          if (!response) {
-            return new Response(404, {}, { error: 'Assessment response not found' });
-          }
-
-          return withLatency(response);
-        } catch (error) {
-          return new Response(500, {}, { error: 'Failed to fetch assessment response' });
-        }
-      });
-
-      // Handle preflight requests
-      this.options('/*', () => new Response(200));
-    },
-  });
-
-  return server;
-}) {
-          return new Response(500, {}, { error: 'Failed to fetch jobs' });
-        }
-      });
 
       this.get('/jobs/:id', async (schema, request) => {
         try {
@@ -416,13 +389,27 @@ export function makeServer({ environment = 'development' } = {}) {
           return new Response(500, {}, { error: 'Failed to fetch candidate' });
         }
       });
-
-      this.get('/candidates/:id/timeline', async (schema, request) => {
+      this.get('/assessments/:jobId/responses/:candidateId', async (schema, request) => {
         try {
-          const timeline = await db.getCandidateTimeline(request.params.id);
-          return withLatency(timeline);
+          const response = await db.getAssessmentResponse(
+            request.params.candidateId,
+            request.params.jobId
+          );
+
+          if (!response) {
+            return new Response(404, {}, { error: 'Assessment response not found' });
+          }
+
+          return withLatency(response);
         } catch (error) {
-console.log(error)
-}
-})
+          return new Response(500, {}, { error: 'Failed to fetch assessment response' });
+        }
+      });
+
+      // Handle preflight requests
+      this.options('/*', () => new Response(200));
+    },
+  });
+
+  return server;
 }
